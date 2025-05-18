@@ -83,3 +83,7 @@ Dans un terminal, exécuter streamlit run app.py
 Ouvrir l’URL locale fournie (généralement http://localhost:8501)
 
 Interagir avec les sliders pour tester différents profils patients
+
+liens vers le drive présentant le dataset ainsi que la vidéo explicative
+https://drive.google.com/file/d/1lUld_SDHN1H29bADNZaTkn9N1FqZTX2e/view?usp=sharing
+
