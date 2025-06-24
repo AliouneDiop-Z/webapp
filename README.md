@@ -1,6 +1,6 @@
 ## Diabetes Risk Predictor v1
 
-Le **Diabetes Risk Predictor** est une WebApp Streamlit interactive conçue pour estimer la probabilité qu'un patient développe un diabète de type 2 à partir de mesures cliniques basiques (nombre de grossesses, taux de glucose, tension artérielle, etc.). Réalisée dans un but pédagogique, elle met en œuvre un pipeline complet de Machine Learning (prétraitement, entraînement, sauvegarde du modèle) et son déploiement avec Streamlit.
+Le **Diabetes Risk Predictor** est une WebApp Streamlit interactive conçue pour estimer la probabilité qu'un patient développe un diabète de type 2 à partir de mesures cliniques basiques (nombre de grossesses, taux de glucose, tension artérielle, etc.). Réalisée dans un but pédagogique pour le DU Sorbonne Data Analytics 2024-2025 par **Alioune DIOP**, elle met en œuvre un pipeline complet de Machine Learning (prétraitement, entraînement, sauvegarde du modèle) et son déploiement avec Streamlit.
 
 ### Dépôt GitHub Python
 
