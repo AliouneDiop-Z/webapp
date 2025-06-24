@@ -1,86 +1,110 @@
-Objectif de la WebApp
+## Diabetes Risk Predictor v1
 
-Cette application interactive a pour but de prédire la probabilité qu'un patient soit atteint de diabète de type 2 à partir de mesures cliniques basiques (nombre de grossesses, taux de glucose, tension artérielle, etc.). L’utilisateur peut saisir ces paramètres via une interface web et obtenir en temps réel :
+Le **Diabetes Risk Predictor** est une WebApp Streamlit interactive conçue pour estimer la probabilité qu'un patient développe un diabète de type 2 à partir de mesures cliniques basiques (nombre de grossesses, taux de glucose, tension artérielle, etc.). Réalisée dans un but pédagogique, elle met en œuvre un pipeline complet de Machine Learning (prétraitement, entraînement, sauvegarde du modèle) et son déploiement avec Streamlit.
 
-Une probabilité d’être diabétique (en pourcentage)
+### Dépôt GitHub Python
 
-Un diagnostic binaire (diabétique / non-diabétique)
+---
 
-L’objectif pédagogique est de mettre en place un pipeline complet de Machine Learning (prétraitement, entraînement, sauvegarde du modèle) et de le déployer simplement avec Streamlit.
+### 1️⃣ ✨ Objectif de la WebApp
 
-Choix du dataset
+* Prédire en temps réel la **probabilité** qu’un patient soit diabétique (en pourcentage).
+* Fournir un **diagnostic binaire** (diabétique / non-diabétique).
+* Illustrer un **pipeline ML** complet : prétraitement, entraînement, sérialisation du modèle.
 
-Nous utilisons le jeu de données diabetes.csv issu des Pima Indians Women disponible sur Kaggle et la UCI Machine Learning Repository. Ce dataset est couramment utilisé pour des projets de détection du diabète :
+### 2️⃣ 🚀 Démo rapide
 
-Avantages :
+* **Cloner le dépôt et installer les dépendances** (cf. §6).
+* Lancer l’application :
 
-Taille raisonnable (768 échantillons), idéal pour des démonstrations locales
+  ```bash
+  streamlit run app.py
+  ```
+* **Dans l’interface :**
 
-Variables numériques standardisées (Glucose, BMI, etc.)
+  1. Ajuster les sliders et inputs pour les 8 variables cliniques.
+  2. Vérifier le DataFrame récapitulatif.
+  3. Cliquer sur **Prédire** pour obtenir :
 
-Classification binaire claire (Outcome = 0 ou 1)
+     * La probabilité (pipeline.predict\_proba)
+     * Le diagnostic (pipeline.predict)
+  4. Résultat affiché en **vert** (non-diabétique) ou **rouge** (diabétique).
 
-Inconvénients :
+### 3️⃣ 📊 Choix du jeu de données
 
-Présence de valeurs manquantes codées en 0 (ex. Insulin, SkinThickness)
+Nous utilisons `diabetes.csv` issu des **Pima Indians Women**, disponible sur Kaggle et la UCI ML Repository.
 
-Jeu assez petit, donc modèle à prendre avec précaution pour un usage clinique réel
+| Points forts                          | Limites                                                      |
+| ------------------------------------- | ------------------------------------------------------------ |
+| 768 échantillons (taille raisonnable) | Valeurs manquantes codées en 0 (insuline, épaisseur cutanée) |
+| Variables numériques standardisées    | Jeu assez petit pour un usage clinique réel                  |
+| Classification binaire claire         |                                                              |
 
-Choix du modèle
+**Source** : Kaggle / UCI Machine Learning Repository
 
-Nous avons opté pour un Random Forest Classifier de scikit-learn pour les raisons suivantes :
+### 4️⃣ 🧠 Choix du modèle & pipeline
 
-Robustesse aux valeurs manquantes après imputation, et capacité à gérer des variables de nature différente sans trop de réglages
+**Modèle :** Random Forest Classifier de scikit‑learn
+**Avantages :** robustesse aux données après imputation, interprétabilité via `feature_importances_`, bonnes performances sans optimisation poussée.
 
-Interprétabilité relative : on peut extraire l’importance des variables par feature_importances_
+**Pipeline :**
 
-Performance généralement bonne même sans optimisation poussée
+1. **Imputation** par la médiane (`SimpleImputer`) pour remplacer les zéros aberrants
+2. **Standardisation** (`StandardScaler`)
+3. **Entraînement** du `RandomForestClassifier(random_state=42)`
 
-Simplicité de mise en œuvre avec la Pipeline de scikit-learn
+### 5️⃣ ⚙️ Fonctionnement global
 
-La pipeline se compose de :
+```
+./
+├── train_model.py      # Chargement des données, construction & entraînement du pipeline, évaluation, sauvegarde dans diabetes_pipeline.pkl
+├── app.py              # WebApp Streamlit : chargement du pipeline, interface utilisateur, prédiction
+├── diabetes_pipeline.pkl
+├── diabetes.csv
+└── requirements.txt
+```
 
-Imputation par la médiane (SimpleImputer) pour remplacer les zéros aberrants
+**Étapes d’entraînement (train\_model.py) :**
 
-Standardisation (StandardScaler) pour centrer/réduire chaque variable
+* Chargement de `diabetes.csv`
+* Construction et entraînement du pipeline
+* Évaluation train/test (classification report + ROC‑AUC)
+* Sérialisation dans `diabetes_pipeline.pkl`
 
-Entraînement du RandomForestClassifier avec random_state=42 pour la reproductibilité
+**Déploiement (app.py) :**
 
-Fonctionnement global de l'application
+* Chargement de la pipeline sauvegardée
+* Interface Streamlit pour saisir les 8 variables
+* Affichage dynamique de la probabilité et du diagnostic
 
-Entraînement (train_model.py) :
+### 6️⃣ 📥 Installation & lancement
 
-Chargement de diabetes.csv
+```bash
+# 1. Cloner le repo
+git clone https://github.com/votre-utilisateur/diabetes-risk-predictor.git
+cd diabetes-risk-predictor
 
-Construction et entraînement de la pipeline (imputation → standardisation → modèle)
+# 2. Créer et activer l’environnement
+python -m venv .venv && source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate                         # Windows
 
-Évaluation sur un split train/test (classification report + ROC-AUC)
+# 3. Installer les dépendances
+pip install --upgrade pip
+pip install -r requirements.txt
 
-Sauvegarde de la pipeline dans diabetes_pipeline.pkl
+# 4. Lancer l’application
+streamlit run app.py
+```
 
-Déploiement (app.py) :
+> **Note :** l’application requiert que `diabetes_pipeline.pkl` et `diabetes.csv` se trouvent à la racine du projet.
 
-Chargement de la pipeline sauvegardée
+### 7️⃣ 📎 Ressources
 
-Interface Streamlit :
+* **Dataset & vidéo explicative** : [Drive](https://drive.google.com/file/d/1lUld_SDHN1H29bADNZaTkn9N1FqZTX2e/view?usp=sharing)
 
-Sliders et number_input pour saisir les 8 variables cliniques
+---
 
-Affichage du DataFrame saisi pour confirmation
-
-Bouton « Prédire » qui déclenche :
-
-pipeline.predict_proba pour obtenir la probabilité
-
-pipeline.predict pour le diagnostic binaire
-
-Affichage coloré du résultat (vert pour non diabétique, rouge pour diabétique)
-
-Utilisation :
-
-Dans un terminal, exécuter streamlit run app.py
-
-Ouvrir l’URL locale fournie (généralement http://localhost:8501)
+*Fin du document.*
 
 Interagir avec les sliders pour tester différents profils patients
 
